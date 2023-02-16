@@ -1,6 +1,5 @@
 --Question 10
-WITH hr_2016 AS (SELECT LEFT(p.finalgame, 4)::numeric-LEFT(p.debut, 4)::numeric AS career_length,
-							p.playerid,
+WITH hr_2016 AS (SELECT 	p.playerid,
 				 			p.namelast,
 				 			p.namefirst,
 				 			MAX(hr) AS total_hr_2016
@@ -8,16 +7,14 @@ WITH hr_2016 AS (SELECT LEFT(p.finalgame, 4)::numeric-LEFT(p.debut, 4)::numeric 
 				INNER JOIN people AS p
 				ON b.playerid=p.playerid
 				WHERE b.yearid = '2016'
-					AND LEFT(p.finalgame, 4)::numeric-LEFT(p.debut, 4)::numeric >=10
+					AND (date(p.finalgame)-date(p.debut))/365 >=10
 					AND hr >1
 				GROUP BY p.playerid),
 career_hr AS (SELECT MAX(hr) AS max_hr,
-			  playerid
+	 		 playerid
 			 FROM batting
 			 GROUP BY playerid)
-SELECT h1.career_length,
-		h1.playerid,
-		h1.total_hr_2016,
+SELECT 	h1.total_hr_2016,
 		h1.namefirst,
 		h1.namelast
 FROM hr_2016 AS h1
